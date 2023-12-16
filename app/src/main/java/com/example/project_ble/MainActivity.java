@@ -8,36 +8,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.AdvertiseCallback;
-import android.bluetooth.le.AdvertiseData;
-import android.bluetooth.le.AdvertiseSettings;
-import android.bluetooth.le.BluetoothLeAdvertiser;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.ParcelUuid;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-
-    private BluetoothLeAdvertiser advertiser;
-    private AdvertiseCallback advertiseCallback;
-
     private ActivityResultLauncher<Intent> enableBluetoothLauncher;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +41,18 @@ public class MainActivity extends AppCompatActivity {
 
         checkAndAskPermission();
 
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        advertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
-        Button btnAdvertise = findViewById(R.id.btnAdvertise);
-        btnAdvertise.setOnClickListener(v -> startAdvertising());
+        Button btn_host = findViewById(R.id.btn_host);
+        Button btn_user = findViewById(R.id.btn_user);
+
+        btn_host.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HostActivity.class);
+            startActivity(intent);
+        });
+
+        btn_user.setOnClickListener(v->{
+            Intent intent = new Intent(this, UserActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void checkAndAskPermission(){
@@ -102,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Permission", "Permission BLUETOOTH_ADVERTISE get");
                     }else{
                         Toast.makeText(this, "需要鄰近分享權限", Toast.LENGTH_SHORT).show();
-                        onDestroy();
+                        //onDestroy();
                     }
                     break;
                 case android.Manifest.permission.BLUETOOTH_CONNECT:
@@ -110,54 +101,11 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Permission", "Permission BLUETOOTH_CONNECT get");
                     }else{
                         Toast.makeText(this, "需要藍芽權限", Toast.LENGTH_SHORT).show();
-                        onDestroy();
+                        //onDestroy();
                     }
                     break;
             }
         }
         checkAndEnableBluetooth();
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startAdvertising() {
-        AdvertiseSettings settings = new AdvertiseSettings.Builder()
-                .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-                .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
-                .setConnectable(false)
-                .build();
-
-        ParcelUuid pUuid = new ParcelUuid(UUID.fromString("00002000-0000-1000-8000-00805f9b34fb"));
-        AdvertiseData data = new AdvertiseData.Builder()
-                .addServiceUuid(pUuid)
-                .addServiceData(pUuid, "HELLOWORLD".getBytes(Charset.forName("ASCII")))
-                .build();
-
-        advertiseCallback = new AdvertiseCallback() {
-            @Override
-            public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-                super.onStartSuccess(settingsInEffect);
-                // 廣播開始成功
-                Log.d("BLE", "廣播開始成功");
-            }
-
-            @Override
-            public void onStartFailure(int errorCode) {
-                super.onStartFailure(errorCode);
-                // 廣播開始失敗
-                Log.e("BLE", "廣播開始失敗: " + errorCode);
-            }
-        };
-
-        advertiser.startAdvertising(settings, data, advertiseCallback);
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (advertiser != null) {
-                advertiser.stopAdvertising(advertiseCallback);
-        }
-        finish();
     }
 }
