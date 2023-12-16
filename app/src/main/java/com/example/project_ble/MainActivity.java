@@ -57,8 +57,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkAndAskPermission(){
         ArrayList<String> requestPermissionArray = new ArrayList<>();
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            requestPermissionArray.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            requestPermissionArray.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        }
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED){
             requestPermissionArray.add(android.Manifest.permission.BLUETOOTH_CONNECT);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED){
+            requestPermissionArray.add(android.Manifest.permission.BLUETOOTH_SCAN);
         }
         if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED){
             requestPermissionArray.add(android.Manifest.permission.BLUETOOTH_ADVERTISE);

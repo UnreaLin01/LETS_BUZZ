@@ -6,4 +6,86 @@
     android:layout_height="match_parent"
     tools:context=".UserActivity">
 
+    <Button
+        android:id="@+id/btn_go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:enabled="false"
+        android:text="搶答!!!"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_lockRoom"
+        app:layout_constraintStart_toEndOf="@+id/btn_lockRoom"
+        app:layout_constraintTop_toTopOf="@+id/btn_lockRoom" />
+
+    <TextView
+        android:id="@+id/tv_user_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="房間編號："
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/num_user_room"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:hint="請輸入1-1000之數字"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_user_room"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_user_room"
+        app:layout_constraintTop_toTopOf="@+id/tv_user_room" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="名稱："
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_user_room"
+        app:layout_constraintStart_toStartOf="@+id/tv_user_room"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_room" />
+
+    <EditText
+        android:id="@+id/ed_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="請輸入你的名稱"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+        app:layout_constraintEnd_toEndOf="@+id/num_user_room"
+        app:layout_constraintStart_toStartOf="@+id/num_user_room"
+        app:layout_constraintTop_toTopOf="@+id/tv_name" />
+
+    <Button
+        android:id="@+id/btn_lockRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="鎖定房間"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <ListView
+        android:id="@+id/listview_ble_devices"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_lockRoom" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

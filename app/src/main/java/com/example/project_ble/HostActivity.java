@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.ParcelUuid;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -19,34 +21,40 @@ public class HostActivity extends AppCompatActivity {
 
     private BluetoothLeAdvertiser advertiser;
     private AdvertiseCallback advertiseCallback;
+    private EditText num_room;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host);
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_host);
 
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        advertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            advertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
 
-        Button btn_start = findViewById(R.id.btn_start);
-        Button btn_stop = findViewById(R.id.btn_stop);
-        //btn_start.setOnClickListener(view -> startAdvertising());
-        btn_start.setOnClickListener(v -> {
-            btn_stop.setEnabled(true);
-            btn_start.setEnabled(false);
-            startAdvertising();
-        });
+            Button btn_start = findViewById(R.id.btn_start);
+            Button btn_stop = findViewById(R.id.btn_stop);
+            EditText num_room = findViewById(R.id.num_room);
 
-        btn_stop.setOnClickListener(v -> {
-            btn_stop.setEnabled(false);
-            btn_start.setEnabled(true);
-            try{
-                advertiser.stopAdvertising(advertiseCallback);
-            }catch(SecurityException err){
-                err.printStackTrace();
-            }
-        });
-    }
+            btn_start.setOnClickListener(v -> {
+                if(num_room.getText().toString().isEmpty()){
+                    Toast.makeText(this, "請輸入房間編號！", Toast.LENGTH_SHORT).show();
+                }else{
+                    btn_stop.setEnabled(true);
+                    btn_start.setEnabled(false);
+                    startAdvertising();
+                }
+            });
+
+            btn_stop.setOnClickListener(v -> {
+                btn_stop.setEnabled(false);
+                btn_start.setEnabled(true);
+                try{
+                    advertiser.stopAdvertising(advertiseCallback);
+                }catch(SecurityException err){
+                    err.printStackTrace();
+                }
+            });
+        }
 
     private void startAdvertising() {
         AdvertiseSettings settings = new AdvertiseSettings.Builder()
@@ -55,10 +63,14 @@ public class HostActivity extends AppCompatActivity {
                 .setConnectable(false)
                 .build();
 
-        ParcelUuid pUuid = new ParcelUuid(UUID.fromString("00002000-0000-1000-8000-00805f9b34fb"));
+        ParcelUuid serviceUUID = new ParcelUuid(UUID.fromString("00002000-0000-1000-8000-00805f9b34fb"));
+        ParcelUuid chacRoomUUID = new ParcelUuid(UUID.fromString("00002001-0000-1000-8000-00805f9b34fb"));
+        ParcelUuid chacKeyUUID = new ParcelUuid(UUID.fromString("00002002-0000-1000-8000-00805f9b34fb"));
+        EditText num_room = findViewById(R.id.num_room);
         AdvertiseData data = new AdvertiseData.Builder()
-                .addServiceUuid(pUuid)
-                .addServiceData(pUuid, "HELLOWORLD".getBytes(Charset.forName("ASCII")))
+                .addServiceUuid(serviceUUID)
+                .addServiceData(chacRoomUUID, num_room.getText().toString().getBytes(Charset.forName("ASCII")))
+                .addServiceData(chacKeyUUID, new String("KEY").getBytes(Charset.forName("ASCII")))
                 .build();
 
         advertiseCallback = new AdvertiseCallback(){
