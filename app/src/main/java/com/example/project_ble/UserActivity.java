@@ -17,11 +17,9 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelUuid;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -39,9 +37,10 @@ import java.util.UUID;
 public class UserActivity extends AppCompatActivity {
 
     private BluetoothLeScanner bluetoothLeScanner;
-    private BluetoothLeAdvertiser advertiser;
-    private AdvertiseCallback advertiseCallback;
-    private ScanCallback leScanCallback;
+    private ScanCallback bluetoothLeScanCallback;
+    private BluetoothLeAdvertiser bluetoothLeAdvertiser;
+    private AdvertiseCallback bluetoothLeAdvertiseCallback;
+
     private ArrayAdapter<String> listAdapter;
     private ListView listView;
     private Button btn_lockRoom, btn_go;
@@ -57,15 +56,15 @@ public class UserActivity extends AppCompatActivity {
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(listAdapter);
 
-        // 初始化蓝牙适配器和扫描回调
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        bluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
 
         num_user_room = findViewById(R.id.num_user_room);
         btn_go = findViewById(R.id.btn_go);
 
-        leScanCallback = new ScanCallback() {
+        bluetoothLeScanCallback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 super.onScanResult(callbackType, result);
@@ -76,7 +75,7 @@ public class UserActivity extends AppCompatActivity {
                 if (scanRecord != null) {
                     Map<ParcelUuid, byte[]> serviceData = scanRecord.getServiceData();
                     ParcelUuid chacRoomUUID = new ParcelUuid(UUID.fromString("00002001-0000-1000-8000-00805f9b34fb"));
-                    ParcelUuid chacKeyUUID = new ParcelUuid(UUID.fromString("00002002-0000-1000-8000-00805f9b34fb"));
+                    //ParcelUuid chacKeyUUID = new ParcelUuid(UUID.fromString("00002002-0000-1000-8000-00805f9b34fb"));
 
                     if (serviceData.containsKey(chacRoomUUID)) {
                         byte[] data = serviceData.get(chacRoomUUID);
@@ -84,7 +83,7 @@ public class UserActivity extends AppCompatActivity {
 
                         if(room.equals(num_user_room.getText().toString())){
                             btn_go.setEnabled(true);
-                            bluetoothLeScanner.stopScan(leScanCallback);
+                            bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
                         }
 
                         String deviceInfo = device.getAddress() + " - Data: " + room;
@@ -99,6 +98,7 @@ public class UserActivity extends AppCompatActivity {
 
         btn_lockRoom = findViewById(R.id.btn_lockRoom);
         num_user_room = findViewById(R.id.num_user_room);
+        EditText ed_name = findViewById(R.id.ed_name);
 
 
         btn_lockRoom.setOnClickListener(v -> {
@@ -108,16 +108,31 @@ public class UserActivity extends AppCompatActivity {
                 if(lockRoom == 0){
                     lockRoom = 1;
                     num_user_room.setEnabled(false);
+                    ed_name.setEnabled(false);
                     btn_lockRoom.setText("解除鎖定");
                     Log.d("BLE","Start Scan");
                     startScanning();
                 }else if(lockRoom == 1){
                     lockRoom = 0;
                     num_user_room.setEnabled(true);
+                    ed_name.setEnabled(true);
                     btn_lockRoom.setText("鎖定房間");
-                    bluetoothLeScanner.stopScan(leScanCallback);
+                    bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
                 }
             }
+        });
+
+        btn_go.setOnClickListener(v -> {
+            btn_go.setEnabled(false);
+            startAdvertising();
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bluetoothLeAdvertiser.stopAdvertising(bluetoothLeAdvertiseCallback);
+                    Log.d("BLE", "USER STOP ADVERTISE");
+                }
+            }, 1000);
         });
     }
 
@@ -133,7 +148,7 @@ public class UserActivity extends AppCompatActivity {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();
 
-        bluetoothLeScanner.startScan(filters, settings, leScanCallback);
+        bluetoothLeScanner.startScan(filters, settings, bluetoothLeScanCallback);
     }
 
     private void startAdvertising() {
@@ -143,38 +158,42 @@ public class UserActivity extends AppCompatActivity {
                 .setConnectable(false)
                 .build();
 
-        ParcelUuid serviceUUID = new ParcelUuid(UUID.fromString("00002000-0000-1000-8000-00805f9b34fb"));
-        ParcelUuid chacRoomUUID = new ParcelUuid(UUID.fromString("00002001-0000-1000-8000-00805f9b34fb"));
-        ParcelUuid chacKeyUUID = new ParcelUuid(UUID.fromString("00002002-0000-1000-8000-00805f9b34fb"));
-        EditText num_room = findViewById(R.id.num_room);
+        ParcelUuid serviceUUID = new ParcelUuid(UUID.fromString("00003000-0000-1000-8000-00805f9b34fb"));
+        ParcelUuid chacRoomUUID = new ParcelUuid(UUID.fromString("00003001-0000-1000-8000-00805f9b34fb"));
+        ParcelUuid chacUserUUID = new ParcelUuid(UUID.fromString("00003002-0000-1000-8000-00805f9b34fb"));
+        EditText user_room = findViewById(R.id.num_user_room);
+        EditText ed_name = findViewById(R.id.ed_name);
         AdvertiseData data = new AdvertiseData.Builder()
                 .addServiceUuid(serviceUUID)
-                .addServiceData(chacRoomUUID, num_room.getText().toString().getBytes(Charset.forName("ASCII")))
+                .addServiceData(chacRoomUUID, num_user_room.getText().toString().getBytes(Charset.forName("UTF-8")))
+                .addServiceData(chacUserUUID, ed_name.getText().toString().getBytes(Charset.forName("UTF-8")))
                 .build();
 
-        advertiseCallback = new AdvertiseCallback(){
+        bluetoothLeAdvertiseCallback = new AdvertiseCallback() {
             @Override
             public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                 super.onStartSuccess(settingsInEffect);
-                Log.d("BLE", "BLE advertise successful");
+                Log.d("BLE", "User BLE advertise successful");
             }
+
             @Override
             public void onStartFailure(int errorCode) {
                 super.onStartFailure(errorCode);
-                Log.e("BLE", "BLE advertise fail" + errorCode);
+                Log.e("BLE", "User BLE advertise fail" + errorCode);
             }
         };
 
         try {
-            advertiser.startAdvertising(settings, data, advertiseCallback);
-        }catch (SecurityException err){
+            bluetoothLeAdvertiser.startAdvertising(settings, data, bluetoothLeAdvertiseCallback);
+        } catch (SecurityException err) {
             err.printStackTrace();
         }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        bluetoothLeScanner.stopScan(leScanCallback);
-        advertiser.stopAdvertising(advertiseCallback);
+        bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
+        bluetoothLeAdvertiser.stopAdvertising(bluetoothLeAdvertiseCallback);
     }
 }
