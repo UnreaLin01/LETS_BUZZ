@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -15,6 +16,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:text="開始搶答"
+        android:fontFamily="@font/chakrapetchbold"
         android:background="@drawable/background_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_room" />
@@ -26,6 +28,7 @@
         android:layout_marginStart="16dp"
         android:enabled="false"
         android:text="停止搶答"
+        android:fontFamily="@font/chakrapetchbold"
         android:background="@drawable/background_btn"
         app:layout_constraintBottom_toBottomOf="@+id/btn_start"
         app:layout_constraintStart_toEndOf="@+id/btn_start"
@@ -39,6 +42,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="房間編號："
+        android:fontFamily="@font/chakrapetchbold"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -51,6 +56,8 @@
         android:layout_marginEnd="32dp"
         android:ems="10"
         android:hint="請輸入1-1000之數字"
+        android:fontFamily="@font/chakrapetchbold"
+        android:textColor="@color/black"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="@+id/tv_room"
         app:layout_constraintEnd_toEndOf="parent"

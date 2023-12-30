@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UserActivity">
@@ -13,6 +14,7 @@
         android:layout_marginStart="16dp"
         android:enabled="false"
         android:text="搶答!!!"
+        android:fontFamily="@font/chakrapetchbold"
         app:layout_constraintBottom_toBottomOf="@+id/btn_lockRoom"
         app:layout_constraintStart_toEndOf="@+id/btn_lockRoom"
         app:layout_constraintTop_toTopOf="@+id/btn_lockRoom" />
@@ -24,6 +26,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="房間編號："
+        android:fontFamily="@font/chakrapetchbold"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +39,7 @@
         android:layout_marginEnd="32dp"
         android:ems="10"
         android:hint="請輸入1-1000之數字"
+        android:fontFamily="@font/chakrapetchbold"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="@+id/tv_user_room"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="名稱："
+        android:fontFamily="@font/chakrapetchbold"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/tv_user_room"
         app:layout_constraintStart_toStartOf="@+id/tv_user_room"
@@ -59,6 +64,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="請輸入你的名稱"
+        android:fontFamily="@font/chakrapetchbold"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="@+id/tv_name"
         app:layout_constraintEnd_toEndOf="@+id/num_user_room"
@@ -72,6 +78,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:text="鎖定房間"
+        android:fontFamily="@font/chakrapetchbold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 

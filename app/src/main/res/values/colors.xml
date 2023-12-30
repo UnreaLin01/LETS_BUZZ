@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="redPantonee">#C12529</color>
+
     <color name="primary_color">#565cce</color>
     <color name="second_color">#8d92fa</color>
+    <color name="white_color">#F5EEE8</color>
 </resources>

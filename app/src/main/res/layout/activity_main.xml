@@ -4,24 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/redPantonee"
+    android:background="@color/white_color"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="380dp"
-        android:layout_height="800dp"
-        app:srcCompat="@drawable/image_big_hero_6"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-1dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="The BLE Answering Machine"
+        android:text="Choose The Button"
         android:textSize="25sp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:fontFamily="@font/chakrapetchbold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +29,7 @@
         android:background="@drawable/background_btn"
         android:fontFamily="@font/chakrapetchbold"
         android:text="HOST"
-        android:textColor="@color/black"
+        android:textColor="@color/white_color"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +46,7 @@
         android:fontFamily="@font/chakrapetchbold"
         android:text="USER"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/white_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
