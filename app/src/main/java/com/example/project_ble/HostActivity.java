@@ -17,6 +17,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
@@ -25,7 +26,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -38,6 +42,11 @@ public class HostActivity extends AppCompatActivity {
     private ScanCallback bluetoothLeScanCallback;
     private BluetoothLeAdvertiser bluetoothLeAdvertiser;
     private AdvertiseCallback bluetoothLeAdvertiseCallback;
+    private static final long START_TIME_IN_MILLIS = 5050;
+    private TextView mTextViewCountDown;
+    private CountDownTimer countDownTimer;
+    private boolean mTimerRunning;
+    private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,7 @@ public class HostActivity extends AppCompatActivity {
         Button btn_stop = findViewById(R.id.btn_stop);
         EditText ed_room = findViewById(R.id.ed_room);
         ListView lv_rank = findViewById(R.id.lv_rank);
+        mTextViewCountDown = findViewById(R.id.text_view_countdown);
         ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         lv_rank.setAdapter(listAdapter);
 
@@ -112,6 +122,8 @@ public class HostActivity extends AppCompatActivity {
             }
         };
 
+
+
         btn_start.setOnClickListener(v -> {
             if(ed_room.getText().toString().isEmpty()){
                 Toast.makeText(this, "請輸入房間編號！", Toast.LENGTH_SHORT).show();
@@ -123,6 +135,8 @@ public class HostActivity extends AppCompatActivity {
                 btn_start.setEnabled(false);
                 startAdvertising();
                 startScanning();
+                startTimer();
+                updateCountDownText();
                 handler.postDelayed(taskEndBuzz, 5000);
             }
         });
@@ -176,14 +190,32 @@ public class HostActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try{
-            bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
-            bluetoothLeAdvertiser.stopAdvertising(bluetoothLeAdvertiseCallback);
-        }catch(SecurityException err){
-            err.printStackTrace();
-        }
+    private void startTimer() {
+        countDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                mTimerRunning = false;
+
+            }
+        }.start();
+
+        mTimerRunning = true;
+
     }
+
+
+    private void updateCountDownText() {
+        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+
+        String timeLeftFormatted = String.format("%d",seconds);
+
+        mTextViewCountDown.setText(timeLeftFormatted);
+    }
+
 }
