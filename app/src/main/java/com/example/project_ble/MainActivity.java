@@ -13,6 +13,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> enableBluetoothLauncher;
     private MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         Button btn_host = findViewById(R.id.btn_host);
         Button btn_user = findViewById(R.id.btn_user);
 
+
         btn_host.setOnClickListener(v -> {
-            mediaPlayer = MediaPlayer.create(this, R.raw.click_sound);
             playClickSound();
             Intent intent = new Intent(this, HostActivity.class);
             startActivity(intent);
@@ -58,29 +60,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, UserActivity.class);
             startActivity(intent);
         });
-
-        btn_host.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HostActivity.class);
-            startActivity(intent);
-        });
-
-        btn_user.setOnClickListener(v->{
-            Intent intent = new Intent(this, UserActivity.class);
-            startActivity(intent);
-        });
-    }
-    private void playClickSound() {
-        if (mediaPlayer != null) {
-            mediaPlayer.start();
-        }
-    }
-    @Override
-    protected void onDestroy() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-        super.onDestroy();
     }
 
     private void checkAndAskPermission(){
@@ -144,5 +123,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         checkAndEnableBluetooth();
+    }
+    private void playClickSound() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.click_sound);
+        mediaPlayer.start();
     }
 }
