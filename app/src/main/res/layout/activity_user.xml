@@ -84,6 +84,7 @@
 
     <ListView
         android:id="@+id/listview_ble_devices"
+        android:fontFamily="@font/chakrapetchbold"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"

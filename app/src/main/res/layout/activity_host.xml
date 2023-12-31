@@ -14,10 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:text="開始搶答"
-        android:fontFamily="@font/chakrapetchbold"
+        android:layout_marginTop="10dp"
         android:background="@drawable/background_btn"
+        android:fontFamily="@font/chakrapetchbold"
+        android:text="開始搶答"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_room" />
 
@@ -25,11 +25,11 @@
         android:id="@+id/btn_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:enabled="false"
-        android:text="停止搶答"
-        android:fontFamily="@font/chakrapetchbold"
+        android:layout_marginStart="12dp"
         android:background="@drawable/background_btn"
+        android:enabled="false"
+        android:fontFamily="@font/chakrapetchbold"
+        android:text="停止搶答"
         app:layout_constraintBottom_toBottomOf="@+id/btn_start"
         app:layout_constraintStart_toEndOf="@+id/btn_start"
         app:layout_constraintTop_toTopOf="@+id/btn_start"
@@ -66,6 +66,7 @@
 
     <ListView
         android:id="@+id/lv_rank"
+        android:fontFamily="@font/chakrapetchbold"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"

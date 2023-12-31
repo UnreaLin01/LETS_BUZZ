@@ -23,20 +23,21 @@
         app:layout_constraintVertical_bias="0.10" />
 
     <Button
+        android:onClick="callClick"
         android:id="@+id/btn_host"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="@drawable/background_btn"
         android:fontFamily="@font/chakrapetchbold"
         android:text="HOST"
-        android:textColor="@color/white_color"
+        android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.295" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <Button
         android:id="@+id/btn_user"
@@ -44,15 +45,16 @@
         android:layout_height="50dp"
         android:background="@drawable/background_btn"
         android:fontFamily="@font/chakrapetchbold"
+        android:onClick="callClick"
         android:text="USER"
+        android:textColor="@color/black"
         android:textStyle="bold"
-        android:textColor="@color/white_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.397" />
+        app:layout_constraintVertical_bias="0.45" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
