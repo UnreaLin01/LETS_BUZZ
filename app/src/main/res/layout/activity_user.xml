@@ -8,17 +8,18 @@
     tools:context=".UserActivity">
 
     <Button
-        android:id="@+id/btn_go"
+        android:id="@+id/btn_buzz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:background="@drawable/background_btn"
         android:enabled="false"
-        android:fontFamily="@font/chakrapetchbold"
         android:text="搶答!!!"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_lockRoom"
-        app:layout_constraintStart_toEndOf="@+id/btn_lockRoom"
-        app:layout_constraintTop_toTopOf="@+id/btn_lockRoom" />
+        android:background="@drawable/background_btn"
+        android:fontFamily="@font/chakrapetchbold"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_lock"
+        app:layout_constraintStart_toEndOf="@+id/btn_lock"
+        app:layout_constraintTop_toTopOf="@+id/btn_lock" />
 
     <TextView
         android:id="@+id/tv_user_room"
@@ -27,14 +28,14 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="房間編號："
-        android:textColor="@color/black"
         android:fontFamily="@font/chakrapetchbold"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/num_user_room"
+        android:id="@+id/ed_user_room"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -50,20 +51,20 @@
         app:layout_constraintTop_toTopOf="@+id/tv_user_room" />
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="名稱："
-        android:textColor="@color/black"
         android:fontFamily="@font/chakrapetchbold"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/tv_user_room"
         app:layout_constraintStart_toStartOf="@+id/tv_user_room"
         app:layout_constraintTop_toBottomOf="@+id/tv_user_room" />
 
     <EditText
-        android:id="@+id/ed_name"
+        android:id="@+id/ed_user_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -71,13 +72,13 @@
         android:fontFamily="@font/chakrapetchbold"
         android:textColor="@color/black"
         android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_name"
-        app:layout_constraintEnd_toEndOf="@+id/num_user_room"
-        app:layout_constraintStart_toStartOf="@+id/num_user_room"
-        app:layout_constraintTop_toTopOf="@+id/tv_name" />
+        app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+        app:layout_constraintEnd_toEndOf="@+id/ed_user_room"
+        app:layout_constraintStart_toStartOf="@+id/ed_user_room"
+        app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
 
     <Button
-        android:id="@+id/btn_lockRoom"
+        android:id="@+id/btn_lock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -85,25 +86,27 @@
         android:text="鎖定房間"
         android:background="@drawable/background_btn"
         android:fontFamily="@font/chakrapetchbold"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
 
     <ListView
-        android:id="@+id/listview_ble_devices"
+        android:id="@+id/lv_ble_dbg"
         android:layout_width="0dp"
         android:layout_height="65dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:clickable="false"
         android:contextClickable="false"
-        android:fontFamily="@font/chakrapetchbold"
         android:listSelector="@android:color/transparent"
         android:longClickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.29" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_lock"
+        app:layout_constraintVertical_bias="0.024" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

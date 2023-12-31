@@ -49,7 +49,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/num_room"
+        android:id="@+id/ed_room"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -83,5 +83,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_start"
         app:layout_constraintVertical_bias="0.01" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="96dp"
+        android:layout_height="88dp"
+        app:srcCompat="@drawable/icon"
+        tools:layout_editor_absoluteX="299dp"
+        tools:layout_editor_absoluteY="627dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

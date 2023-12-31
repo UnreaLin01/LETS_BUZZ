@@ -4,8 +4,6 @@
         <shape>
             <solid android:color="@color/teal_200"/>
             <corners android:radius="25sp"/>
-
-
         </shape>
     </item>
 </selector>
