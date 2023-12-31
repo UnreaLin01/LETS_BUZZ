@@ -12,4 +12,7 @@
     <color name="primary_color">#565cce</color>
     <color name="second_color">#8d92fa</color>
     <color name="white_color">#FBF3EA</color>
+    <color name="white2_color"> #F9EFDE</color>
+    <color name="white3_color"> #FFE9CA</color>
+    #FFE9CA
 </resources>
