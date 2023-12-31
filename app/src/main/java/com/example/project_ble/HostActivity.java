@@ -165,6 +165,7 @@ public class HostActivity extends AppCompatActivity {
                 adhandler.postDelayed(addelay,5000);
                 countdown.start();
                 startTimer();
+                startScanning();
                 updateCountDownText();
                 handler.postDelayed(taskEndBuzz, 5000+(Integer.parseInt(ed_set_time.getText().toString())*1000));
             }
