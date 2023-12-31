@@ -16,6 +16,8 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -56,6 +58,7 @@ public class HostActivity extends AppCompatActivity {
         Button btn_start = findViewById(R.id.btn_start);
         Button btn_stop = findViewById(R.id.btn_stop);
         EditText ed_room = findViewById(R.id.ed_room);
+        EditText ed_set_time = findViewById(R.id.ed_set_time);
         ListView lv_rank = findViewById(R.id.lv_rank);
         mTextViewCountDown = findViewById(R.id.text_view_countdown);
         ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
@@ -65,6 +68,24 @@ public class HostActivity extends AppCompatActivity {
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         bluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
+
+        MediaPlayer countdown = MediaPlayer.create(this, R.raw.countdown);
+        countdown.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+        );
+
+        MediaPlayer timesup = MediaPlayer.create(this, R.raw.timesup);
+        timesup.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+        );
+
+
 
         bluetoothLeScanCallback = new ScanCallback() {
             @Override
@@ -114,12 +135,20 @@ public class HostActivity extends AppCompatActivity {
         Runnable taskEndBuzz = () -> {
             btn_stop.setEnabled(false);
             btn_start.setEnabled(true);
+            resetTimer();
+            mTextViewCountDown.setText("");
+            timesup.start();
             try{
                 bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
                 bluetoothLeAdvertiser.stopAdvertising(bluetoothLeAdvertiseCallback);
             }catch(SecurityException err){
                 err.printStackTrace();
             }
+        };
+
+        Handler adhandler = new Handler(Looper.getMainLooper());
+        Runnable addelay = () -> {
+            startAdvertising();
         };
 
 
@@ -133,11 +162,11 @@ public class HostActivity extends AppCompatActivity {
                 listAdapter.clear();
                 btn_stop.setEnabled(true);
                 btn_start.setEnabled(false);
-                startAdvertising();
-                startScanning();
+                adhandler.postDelayed(addelay,5000);
+                countdown.start();
                 startTimer();
                 updateCountDownText();
-                handler.postDelayed(taskEndBuzz, 5000);
+                handler.postDelayed(taskEndBuzz, 5000+(Integer.parseInt(ed_set_time.getText().toString())*1000));
             }
         });
 
@@ -200,22 +229,33 @@ public class HostActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                mTimerRunning = false;
+
 
             }
         }.start();
-
-        mTimerRunning = true;
-
     }
 
+    private void resetTimer() {
+        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+        updateCountDownText();
+    }
+
+    private void pauseTimer() {
+        countDownTimer.cancel();
+
+    }
 
     private void updateCountDownText() {
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
 
         String timeLeftFormatted = String.format("%d",seconds);
+        if (seconds>0){
+            mTextViewCountDown.setText("搶答倒數:"+timeLeftFormatted);
+        }
+        else {
+            mTextViewCountDown.setText("");
+        }
 
-        mTextViewCountDown.setText(timeLeftFormatted);
     }
 
 }

@@ -17,7 +17,7 @@
         android:text="開始搶答"
         android:background="@drawable/background_btn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_room" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_set_time" />
 
     <Button
         android:id="@+id/btn_stop"
@@ -38,8 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text=" "
-        android:textColor="@color/white"
-        android:textSize="50sp"
+        android:textColor="@color/black"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_stop"
         app:layout_constraintStart_toEndOf="@+id/btn_stop"
         app:layout_constraintTop_toTopOf="@+id/btn_stop" />
@@ -55,6 +55,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_set_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="回答時間："
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_room" />
+
     <EditText
         android:id="@+id/ed_room"
         android:layout_width="0dp"
@@ -68,6 +79,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_room"
         app:layout_constraintTop_toTopOf="@+id/tv_room" />
+
+    <EditText
+        android:id="@+id/ed_set_time"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:hint="輸入欲設定秒數"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_set_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_set_time"
+        app:layout_constraintTop_toTopOf="@+id/tv_set_time" />
 
     <ListView
         android:id="@+id/lv_rank"
