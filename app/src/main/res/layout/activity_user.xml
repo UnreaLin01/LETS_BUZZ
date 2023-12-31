@@ -14,9 +14,6 @@
         android:layout_marginStart="16dp"
         android:enabled="false"
         android:text="搶答!!!"
-        android:background="@drawable/background_btn"
-        android:fontFamily="@font/chakrapetchbold"
-        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/btn_lock"
         app:layout_constraintStart_toEndOf="@+id/btn_lock"
         app:layout_constraintTop_toTopOf="@+id/btn_lock" />
