@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,14 +45,19 @@ public class HostActivity extends AppCompatActivity {
     private ScanCallback bluetoothLeScanCallback;
     private BluetoothLeAdvertiser bluetoothLeAdvertiser;
     private AdvertiseCallback bluetoothLeAdvertiseCallback;
-    private static final long START_TIME_IN_MILLIS = 5050;
+    private static final long START_TIME_IN_MILLIS = 5080;
     private TextView mTextViewCountDown;
     private CountDownTimer countDownTimer;
     private boolean mTimerRunning;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
 
+    MediaPlayer countdown;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
@@ -69,13 +75,13 @@ public class HostActivity extends AppCompatActivity {
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         bluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
 
-        MediaPlayer countdown = MediaPlayer.create(this, R.raw.countdown);
+        /*MediaPlayer countdown = MediaPlayer.create(this, R.raw.countdown);
         countdown.setAudioAttributes(
                 new AudioAttributes.Builder()
                         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
-        );
+        );*/
 
         MediaPlayer timesup = MediaPlayer.create(this, R.raw.timesup);
         timesup.setAudioAttributes(
@@ -154,6 +160,7 @@ public class HostActivity extends AppCompatActivity {
 
 
         btn_start.setOnClickListener(v -> {
+
             if(ed_room.getText().toString().isEmpty()){
                 Toast.makeText(this, "請輸入房間編號！", Toast.LENGTH_SHORT).show();
             }else if(Integer.parseInt(ed_room.getText().toString()) > 1000 || Integer.parseInt(ed_room.getText().toString()) < 1){
@@ -163,7 +170,7 @@ public class HostActivity extends AppCompatActivity {
                 btn_stop.setEnabled(true);
                 btn_start.setEnabled(false);
                 adhandler.postDelayed(addelay,5000);
-                countdown.start();
+                startPlayer();
                 startTimer();
                 startScanning();
                 updateCountDownText();
@@ -174,6 +181,8 @@ public class HostActivity extends AppCompatActivity {
         btn_stop.setOnClickListener(v -> {
             handler.removeCallbacks(taskEndBuzz);
             handler.post(taskEndBuzz);
+            pauseTimer();
+            stopPlayer();
         });
     }
 
@@ -257,6 +266,37 @@ public class HostActivity extends AppCompatActivity {
             mTextViewCountDown.setText("");
         }
 
+    }
+
+    public void startPlayer(){
+        if (countdown == null){
+            countdown = MediaPlayer.create(this,R.raw.countdown);
+            countdown.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlayer();
+                }
+            });
+        }
+
+        countdown.start();
+    }
+
+    public void stop(View view){
+        stopPlayer();
+    }
+
+    private void stopPlayer(){
+        if (countdown != null){
+            countdown.release();
+            countdown = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopPlayer();
     }
 
 }

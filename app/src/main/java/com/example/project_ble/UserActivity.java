@@ -118,8 +118,10 @@ public class UserActivity extends AppCompatActivity {
                 mediaPlayer.start();
             }else if(Integer.parseInt(ed_user_room.getText().toString()) > 1000 || Integer.parseInt(ed_user_room.getText().toString()) < 1){
                 Toast.makeText(this, "請輸入1~1000內的數字！", Toast.LENGTH_SHORT).show();
+                mediaPlayer.start();
             }else if(ed_user_name.getText().toString().isEmpty()){
                 Toast.makeText(this, "請輸入名稱", Toast.LENGTH_SHORT).show();
+                mediaPlayer.start();
             }else{
                 if(!roomLocked){
                     ed_user_room.setEnabled(false);
