@@ -15,6 +15,7 @@
         android:layout_height="597dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.41"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
@@ -25,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/background_btn"
         android:fontFamily="@font/chakrapetchbold"
         android:text="開始搶答"
@@ -36,7 +37,7 @@
         android:id="@+id/btn_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/background_btn"
         android:enabled="false"
         android:fontFamily="@font/chakrapetchbold"
@@ -47,15 +48,16 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/text_view_countdown"
+        android:id="@+id/tv_countdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text=" "
+        android:layout_marginLeft="16dp"
+        android:fontFamily="@font/chakrapetchbold"
+        android:text=""
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_stop"
-        app:layout_constraintStart_toEndOf="@+id/btn_stop"
+        app:layout_constraintLeft_toRightOf="@+id/btn_stop"
         app:layout_constraintTop_toTopOf="@+id/btn_stop" />
 
     <TextView
@@ -63,9 +65,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:text="房間編號："
+        android:layout_marginTop="50dp"
         android:fontFamily="@font/chakrapetchbold"
+        android:text="房間編號："
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,8 +78,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/chakrapetchbold"
         android:text="回答時間："
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_room" />
@@ -89,9 +93,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="請輸入1-1000之數字"
         android:fontFamily="@font/chakrapetchbold"
-        android:textColor="@color/black"
+        android:hint="輸入1-1000之數字"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="@+id/tv_room"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,13 +102,14 @@
         app:layout_constraintTop_toTopOf="@+id/tv_room" />
 
     <EditText
-        android:id="@+id/ed_set_time"
+        android:id="@+id/ed_setTime"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="輸入欲設定秒數"
+        android:fontFamily="@font/chakrapetchbold"
+        android:hint="輸入秒數"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="@+id/tv_set_time"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,11 +119,11 @@
     <ListView
         android:id="@+id/lv_rank"
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
         android:clickable="false"
         android:contextClickable="false"
         android:fontFamily="@font/chakrapetchbold"
@@ -127,9 +131,9 @@
         android:longClickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_start"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

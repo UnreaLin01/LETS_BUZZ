@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,11 +31,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -45,10 +43,10 @@ public class HostActivity extends AppCompatActivity {
     private ScanCallback bluetoothLeScanCallback;
     private BluetoothLeAdvertiser bluetoothLeAdvertiser;
     private AdvertiseCallback bluetoothLeAdvertiseCallback;
-    private static final long START_TIME_IN_MILLIS = 5080;
-    private TextView mTextViewCountDown;
+    private TextView tv_countDown;
     private CountDownTimer countDownTimer;
-    private boolean mTimerRunning;
+    //private boolean mTimerRunning;
+    private static final long START_TIME_IN_MILLIS = 5080;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
 
     MediaPlayer countdown;
@@ -56,17 +54,15 @@ public class HostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
         Button btn_start = findViewById(R.id.btn_start);
         Button btn_stop = findViewById(R.id.btn_stop);
         EditText ed_room = findViewById(R.id.ed_room);
-        EditText ed_set_time = findViewById(R.id.ed_set_time);
+        EditText ed_setTime = findViewById(R.id.ed_setTime);
         ListView lv_rank = findViewById(R.id.lv_rank);
-        mTextViewCountDown = findViewById(R.id.text_view_countdown);
+        tv_countDown = findViewById(R.id.tv_countdown);
         ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         lv_rank.setAdapter(listAdapter);
 
@@ -90,7 +86,6 @@ public class HostActivity extends AppCompatActivity {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         );
-
 
 
         bluetoothLeScanCallback = new ScanCallback() {
@@ -139,11 +134,13 @@ public class HostActivity extends AppCompatActivity {
 
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable taskEndBuzz = () -> {
+            timesup.start();
             btn_stop.setEnabled(false);
             btn_start.setEnabled(true);
+            ed_setTime.setEnabled(true);
+            ed_room.setEnabled(true);
             resetTimer();
-            mTextViewCountDown.setText("");
-            timesup.start();
+            tv_countDown.setText("");
             try{
                 bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
                 bluetoothLeAdvertiser.stopAdvertising(bluetoothLeAdvertiseCallback);
@@ -152,29 +149,30 @@ public class HostActivity extends AppCompatActivity {
             }
         };
 
-        Handler adhandler = new Handler(Looper.getMainLooper());
-        Runnable addelay = () -> {
+        Handler advhandler = new Handler(Looper.getMainLooper());
+        Runnable advdelay = () -> {
             startAdvertising();
+            startScanning();
         };
 
-
-
         btn_start.setOnClickListener(v -> {
-
             if(ed_room.getText().toString().isEmpty()){
                 Toast.makeText(this, "請輸入房間編號！", Toast.LENGTH_SHORT).show();
             }else if(Integer.parseInt(ed_room.getText().toString()) > 1000 || Integer.parseInt(ed_room.getText().toString()) < 1){
                 Toast.makeText(this, "請輸入1~1000內的數字！", Toast.LENGTH_SHORT).show();
+            }else if(ed_setTime.getText().toString().isEmpty()){
+                Toast.makeText(this, "請輸入回答秒數", Toast.LENGTH_SHORT).show();
             }else{
                 listAdapter.clear();
                 btn_stop.setEnabled(true);
                 btn_start.setEnabled(false);
-                adhandler.postDelayed(addelay,5000);
+                ed_setTime.setEnabled(false);
+                ed_room.setEnabled(false);
                 startPlayer();
                 startTimer();
-                startScanning();
                 updateCountDownText();
-                handler.postDelayed(taskEndBuzz, 5000+(Integer.parseInt(ed_set_time.getText().toString())*1000));
+                advhandler.postDelayed(advdelay,5000);
+                handler.postDelayed(taskEndBuzz, 5000 + (long)Integer.parseInt(ed_setTime.getText().toString()) * 1000);
             }
         });
 
@@ -240,7 +238,6 @@ public class HostActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
 
-
             }
         }.start();
     }
@@ -252,18 +249,14 @@ public class HostActivity extends AppCompatActivity {
 
     private void pauseTimer() {
         countDownTimer.cancel();
-
     }
 
     private void updateCountDownText() {
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-
-        String timeLeftFormatted = String.format("%d",seconds);
-        if (seconds>0){
-            mTextViewCountDown.setText("搶答倒數:"+timeLeftFormatted);
-        }
-        else {
-            mTextViewCountDown.setText("");
+        if (seconds > 0){
+            tv_countDown.setText(String.format(Locale.getDefault(), "搶答倒數:" + "%d",seconds));
+        }else{
+            tv_countDown.setText("");
         }
 
     }
@@ -271,19 +264,9 @@ public class HostActivity extends AppCompatActivity {
     public void startPlayer(){
         if (countdown == null){
             countdown = MediaPlayer.create(this,R.raw.countdown);
-            countdown.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    stopPlayer();
-                }
-            });
+            countdown.setOnCompletionListener(mp -> stopPlayer());
         }
-
         countdown.start();
-    }
-
-    public void stop(View view){
-        stopPlayer();
     }
 
     private void stopPlayer(){
