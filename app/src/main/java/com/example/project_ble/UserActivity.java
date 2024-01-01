@@ -1,6 +1,5 @@
 package com.example.project_ble;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.bluetooth.BluetoothDevice;
@@ -9,7 +8,6 @@ import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.bluetooth.le.ScanRecord;
-import android.os.Build;
 import android.os.Bundle;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -76,9 +74,9 @@ public class UserActivity extends AppCompatActivity {
 
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         VibrationEffect effect = VibrationEffect.createOneShot(50, 255);
-        
+
         bluetoothLeScanCallback = new ScanCallback() {
-            @RequiresApi(api = Build.VERSION_CODES.Q)
+
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 super.onScanResult(callbackType, result);
