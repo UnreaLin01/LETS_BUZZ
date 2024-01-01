@@ -16,16 +16,23 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -38,16 +45,28 @@ public class HostActivity extends AppCompatActivity {
     private ScanCallback bluetoothLeScanCallback;
     private BluetoothLeAdvertiser bluetoothLeAdvertiser;
     private AdvertiseCallback bluetoothLeAdvertiseCallback;
+    private static final long START_TIME_IN_MILLIS = 5080;
+    private TextView mTextViewCountDown;
+    private CountDownTimer countDownTimer;
+    private boolean mTimerRunning;
+    private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
+
+    MediaPlayer countdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
         Button btn_start = findViewById(R.id.btn_start);
         Button btn_stop = findViewById(R.id.btn_stop);
         EditText ed_room = findViewById(R.id.ed_room);
+        EditText ed_set_time = findViewById(R.id.ed_set_time);
         ListView lv_rank = findViewById(R.id.lv_rank);
+        mTextViewCountDown = findViewById(R.id.text_view_countdown);
         ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         lv_rank.setAdapter(listAdapter);
 
@@ -55,6 +74,24 @@ public class HostActivity extends AppCompatActivity {
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         bluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
+
+        /*MediaPlayer countdown = MediaPlayer.create(this, R.raw.countdown);
+        countdown.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+        );*/
+
+        MediaPlayer timesup = MediaPlayer.create(this, R.raw.timesup);
+        timesup.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+        );
+
+
 
         bluetoothLeScanCallback = new ScanCallback() {
             @Override
@@ -104,6 +141,9 @@ public class HostActivity extends AppCompatActivity {
         Runnable taskEndBuzz = () -> {
             btn_stop.setEnabled(false);
             btn_start.setEnabled(true);
+            resetTimer();
+            mTextViewCountDown.setText("");
+            timesup.start();
             try{
                 bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
                 bluetoothLeAdvertiser.stopAdvertising(bluetoothLeAdvertiseCallback);
@@ -112,7 +152,15 @@ public class HostActivity extends AppCompatActivity {
             }
         };
 
+        Handler adhandler = new Handler(Looper.getMainLooper());
+        Runnable addelay = () -> {
+            startAdvertising();
+        };
+
+
+
         btn_start.setOnClickListener(v -> {
+
             if(ed_room.getText().toString().isEmpty()){
                 Toast.makeText(this, "請輸入房間編號！", Toast.LENGTH_SHORT).show();
             }else if(Integer.parseInt(ed_room.getText().toString()) > 1000 || Integer.parseInt(ed_room.getText().toString()) < 1){
@@ -121,15 +169,20 @@ public class HostActivity extends AppCompatActivity {
                 listAdapter.clear();
                 btn_stop.setEnabled(true);
                 btn_start.setEnabled(false);
-                startAdvertising();
+                adhandler.postDelayed(addelay,5000);
+                startPlayer();
+                startTimer();
                 startScanning();
-                handler.postDelayed(taskEndBuzz, 5000);
+                updateCountDownText();
+                handler.postDelayed(taskEndBuzz, 5000+(Integer.parseInt(ed_set_time.getText().toString())*1000));
             }
         });
 
         btn_stop.setOnClickListener(v -> {
             handler.removeCallbacks(taskEndBuzz);
             handler.post(taskEndBuzz);
+            pauseTimer();
+            stopPlayer();
         });
     }
 
@@ -176,14 +229,74 @@ public class HostActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try{
-            bluetoothLeScanner.stopScan(bluetoothLeScanCallback);
-            bluetoothLeAdvertiser.stopAdvertising(bluetoothLeAdvertiseCallback);
-        }catch(SecurityException err){
-            err.printStackTrace();
+    private void startTimer() {
+        countDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+
+
+            }
+        }.start();
+    }
+
+    private void resetTimer() {
+        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+        updateCountDownText();
+    }
+
+    private void pauseTimer() {
+        countDownTimer.cancel();
+
+    }
+
+    private void updateCountDownText() {
+        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+
+        String timeLeftFormatted = String.format("%d",seconds);
+        if (seconds>0){
+            mTextViewCountDown.setText("搶答倒數:"+timeLeftFormatted);
+        }
+        else {
+            mTextViewCountDown.setText("");
+        }
+
+    }
+
+    public void startPlayer(){
+        if (countdown == null){
+            countdown = MediaPlayer.create(this,R.raw.countdown);
+            countdown.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlayer();
+                }
+            });
+        }
+
+        countdown.start();
+    }
+
+    public void stop(View view){
+        stopPlayer();
+    }
+
+    private void stopPlayer(){
+        if (countdown != null){
+            countdown.release();
+            countdown = null;
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopPlayer();
+    }
+
 }

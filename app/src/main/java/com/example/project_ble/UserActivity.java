@@ -8,6 +8,8 @@ import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.bluetooth.le.ScanRecord;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -42,10 +44,12 @@ public class UserActivity extends AppCompatActivity {
 
     private boolean roomLocked = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
 
         EditText ed_user_room = findViewById(R.id.ed_user_room);
         EditText ed_user_name = findViewById(R.id.ed_user_name);
@@ -54,6 +58,19 @@ public class UserActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.lv_ble_dbg);
         ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(listAdapter);
+
+
+        
+        //set MediaPlayer
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.error);
+        mediaPlayer.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+        );
+
+
 
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
@@ -85,7 +102,7 @@ public class UserActivity extends AppCompatActivity {
                             }
                         }
 
-                        // Use for debyg
+                        // Use for debug(fixed by wei :) )
                         String deviceInfo = device.getAddress() + " - Data: " + room;
                         runOnUiThread(() -> listAdapter.clear());
                         runOnUiThread(() -> listAdapter.add(deviceInfo));
@@ -98,10 +115,13 @@ public class UserActivity extends AppCompatActivity {
         btn_lock.setOnClickListener(v -> {
             if(ed_user_room.getText().toString().isEmpty()){
                 Toast.makeText(this, "請輸入房間編號！", Toast.LENGTH_SHORT).show();
+                mediaPlayer.start();
             }else if(Integer.parseInt(ed_user_room.getText().toString()) > 1000 || Integer.parseInt(ed_user_room.getText().toString()) < 1){
                 Toast.makeText(this, "請輸入1~1000內的數字！", Toast.LENGTH_SHORT).show();
+                mediaPlayer.start();
             }else if(ed_user_name.getText().toString().isEmpty()){
                 Toast.makeText(this, "請輸入名稱", Toast.LENGTH_SHORT).show();
+                mediaPlayer.start();
             }else{
                 if(!roomLocked){
                     ed_user_room.setEnabled(false);
