@@ -2,26 +2,32 @@ package com.example.project_ble;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
-import android.bluetooth.le.ScanRecord;
-import android.os.Bundle;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.ParcelUuid;
+
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+
+import android.os.Handler;
+import android.os.Looper;
+
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+
+import android.os.Bundle;
+import android.content.Context;
+import android.os.ParcelUuid;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -103,9 +109,9 @@ public class UserActivity extends AppCompatActivity {
                         }
 
                         // Use for debug(fixed by wei :) )
-                        String deviceInfo = device.getAddress() + " - Data: " + room;
-                        runOnUiThread(listAdapter::clear);
-                        runOnUiThread(() -> listAdapter.add(deviceInfo));
+                        //String deviceInfo = device.getAddress() + " - Data: " + room;
+                        //runOnUiThread(listAdapter::clear);
+                        //runOnUiThread(() -> listAdapter.add(deviceInfo));
 
                     }
                 }

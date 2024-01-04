@@ -108,8 +108,8 @@ public class HostActivity extends AppCompatActivity {
                         if (ed_room.getText().toString().equals(room)) {
                             data = serviceData.get(chacNameUUID);
                             String userName = new String(data, StandardCharsets.UTF_8);
-                            String userInfo = "Name: " + userName + " - Mac: " + device.getAddress();
-
+                            //String userInfo = "Name: " + userName + " - Mac: " + device.getAddress();
+                            String userInfo = "Name:" + userName;
                             if (listAdapter.getPosition(userInfo) == -1) {
                                 runOnUiThread(() -> listAdapter.add(userInfo));
                             }
